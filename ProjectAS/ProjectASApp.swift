@@ -2,7 +2,7 @@
 //  ProjectASApp.swift
 //  ProjectAS
 //
-//  Created by Eric Johansson on 2023-02-07.
+//  Created by Eric Johansson & Can Kupeli on 2023-02-07.
 //
 
 import SwiftUI

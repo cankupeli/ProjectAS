@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3DFBE572299B915E00E1A134 /* location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFBE571299B915D00E1A134 /* location.swift */; };
+		3DFBE573299B915E00E1A134 /* location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFBE571299B915D00E1A134 /* location.swift */; };
+		3DFBE574299B915E00E1A134 /* location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFBE571299B915D00E1A134 /* location.swift */; };
+		3DFBE576299B91BE00E1A134 /* locationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFBE575299B91BE00E1A134 /* locationViewModel.swift */; };
+		3DFBE577299B91BE00E1A134 /* locationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFBE575299B91BE00E1A134 /* locationViewModel.swift */; };
+		3DFBE578299B91BE00E1A134 /* locationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFBE575299B91BE00E1A134 /* locationViewModel.swift */; };
 		9A2687232992A32B00AA5E82 /* ProjectASApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2687222992A32B00AA5E82 /* ProjectASApp.swift */; };
 		9A2687252992A32B00AA5E82 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2687242992A32B00AA5E82 /* ContentView.swift */; };
 		9A2687272992A32D00AA5E82 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A2687262992A32D00AA5E82 /* Assets.xcassets */; };
@@ -70,6 +76,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3DFBE571299B915D00E1A134 /* location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = location.swift; sourceTree = "<group>"; };
+		3DFBE575299B91BE00E1A134 /* locationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = locationViewModel.swift; sourceTree = "<group>"; };
 		9A26871F2992A32B00AA5E82 /* ProjectAS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectAS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A2687222992A32B00AA5E82 /* ProjectASApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectASApp.swift; sourceTree = "<group>"; };
 		9A2687242992A32B00AA5E82 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -200,6 +208,7 @@
 			isa = PBXGroup;
 			children = (
 				9A2687882992A7E700AA5E82 /* user.swift */,
+				3DFBE571299B915D00E1A134 /* location.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -208,6 +217,7 @@
 			isa = PBXGroup;
 			children = (
 				9A26878D2992A84900AA5E82 /* userViewModel.swift */,
+				3DFBE575299B91BE00E1A134 /* locationViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -379,6 +389,8 @@
 			files = (
 				9A2687252992A32B00AA5E82 /* ContentView.swift in Sources */,
 				9A26878E2992A84900AA5E82 /* userViewModel.swift in Sources */,
+				3DFBE572299B915E00E1A134 /* location.swift in Sources */,
+				3DFBE576299B91BE00E1A134 /* locationViewModel.swift in Sources */,
 				9A2687232992A32B00AA5E82 /* ProjectASApp.swift in Sources */,
 				9A2687892992A7E700AA5E82 /* user.swift in Sources */,
 			);
@@ -389,7 +401,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A26878F2992A84900AA5E82 /* userViewModel.swift in Sources */,
+				3DFBE577299B91BE00E1A134 /* locationViewModel.swift in Sources */,
 				9A26878A2992A7E700AA5E82 /* user.swift in Sources */,
+				3DFBE573299B915E00E1A134 /* location.swift in Sources */,
 				9A2687342992A32D00AA5E82 /* ProjectASTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -400,6 +414,8 @@
 			files = (
 				9A2687402992A32D00AA5E82 /* ProjectASUITestsLaunchTests.swift in Sources */,
 				9A2687902992A84900AA5E82 /* userViewModel.swift in Sources */,
+				3DFBE574299B915E00E1A134 /* location.swift in Sources */,
+				3DFBE578299B91BE00E1A134 /* locationViewModel.swift in Sources */,
 				9A26873E2992A32D00AA5E82 /* ProjectASUITests.swift in Sources */,
 				9A26878B2992A7E700AA5E82 /* user.swift in Sources */,
 			);
