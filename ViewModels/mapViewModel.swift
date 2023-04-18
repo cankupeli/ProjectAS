@@ -44,6 +44,7 @@ final class mapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate{
                     latitudeDelta: 0.09,
                     longitudeDelta: 0.04)
                 )
+            break
         @unknown default:
             break
         }
