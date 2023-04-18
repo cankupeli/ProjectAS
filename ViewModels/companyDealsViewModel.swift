@@ -10,7 +10,7 @@ import FirebaseFirestore
 
 class companyDealsViewModel: ObservableObject {
     
-    @Published var companyDeals = [CompanyDeals]()
+    @Published var companyDeals = [CompanyDeals]()    
     private var db = Firestore.firestore()
     
     func fetchData(company: String) {

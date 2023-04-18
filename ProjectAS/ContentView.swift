@@ -7,16 +7,7 @@
 import SwiftUI
 import MapKit
 
-struct Companydeals: View {
-    @ObservedObject private var companyDeals_ViewModel = companyDealsViewModel()
-    var CompanyID = ""
-    init(CompanyID: String){
-        self.companyDeals_ViewModel.fetchData(company: CompanyID)
-    }
-    var body: some View{
-        Text("Welcome to \(CompanyID)")
-    }
-}
+
 struct CategoryListItem: View{
     let Categorytype: String
     var body: some View {
@@ -33,84 +24,24 @@ struct CategoryListItem: View{
         }.buttonStyle(PlainButtonStyle())
     }
 }
-struct mapCallout: View {
-  @State private var showTitle = false
-    var companyName: String
-  var body: some View {
-      VStack{
-          Text("Sundsvall").font(.title).bold()
-          Spacer()
-          VStack {
-              HStack {
-                  VStack(alignment: .leading) {
-                      Image(systemName: "xmark").frame(maxWidth: .infinity, alignment: .trailing)
-                      Text("\(companyName)")
-                          .font(.title)
-                          .fontWeight(.black)
-                          .foregroundColor(.primary)
-                          .lineLimit(3)
-                      Text("American burgers, served fresh!".uppercased())
-                          .font(.caption)
-                          .foregroundColor(.secondary)
-                      NavigationLink(destination: EmptyView()) {
-                              Text("See Coupons")
-                                  .bold()
-                                  .padding()
-                                  .foregroundColor(.black)
-                                  .background(.black         .opacity(0.1))
-                                  .cornerRadius(15)
-                                  .frame(maxWidth: .infinity, alignment: .center)
-                      }
-                  }
-                  .layoutPriority(100)
-                  Spacer()
-              }.padding()
-          }.background(.white.opacity(0.8))
-                  .cornerRadius(15)
-                  .padding([.top, .horizontal, .bottom])
-      }
-  }
-}
-struct discoveryPage: View {
-    @StateObject private var map_ViewModel = mapViewModel()
-    @ObservedObject private var company_ViewModel = companyViewModel()
-    @State private var companyCoordinates: [Company] = []
-    @State private var clickedStatus = false;
-    @State private var clickedCompany = "";
-    init(){
-        self.company_ViewModel.fetchData(category: "food")
-        self.companyCoordinates = company_ViewModel.company
-    }
+
+struct companyList: View{
+    let currentType : [Company]
     var body: some View {
-            NavigationStack{
-                ZStack{
-                    Map(coordinateRegion: $map_ViewModel.region,
-                        showsUserLocation: true,
-                        annotationItems: companyCoordinates,
-                        annotationContent: { item in
-                        MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: item.location.latitude, longitude: item.location.longitude)){
-                            Button {
-                                if (clickedCompany == item.name){
-                                    clickedCompany = ""
-                                    clickedStatus = false
-                                }
-                                else{
-                                    clickedCompany = item.name
-                                    clickedStatus = true
-                                }
-                            } label: {
-                                Image(systemName: "mappin").symbolRenderingMode(.hierarchical).foregroundStyle(.red)
-                            }
-                        }
-                    }).edgesIgnoringSafeArea(.top).onAppear{
-                        self.map_ViewModel.checkIfLocationServicesIsEnabled()
-                        self.company_ViewModel.fetchData(category: "food")
-                        self.companyCoordinates = company_ViewModel.company}
-                    if (clickedStatus){mapCallout(companyName: clickedCompany)}
+        List(currentType) { company in
+            NavigationLink(destination: Companydeals(CompanyID: company.id)) {
+                HStack{
+                    VStack(alignment: .leading) {
+                        Text(company.name).font(.title)
+                        Text(company.address).font(.headline)
+                    }
+                    Spacer()
+                    VStack(){
+                        Text("3").font(.title)
+                        Text("Coupons")
+                    }
                 }
-        }.tabItem{
-            Image(systemName: "map.fill")
-            Text("Discover")
+            }
         }
     }
 }
@@ -119,10 +50,11 @@ struct companyView: View {
     @ObservedObject private var company_ViewModel = companyViewModel()
     @State private var path = NavigationPath()
     @State private var locationChangerButton = false
-    var category = ""
-    var logo = ""
+    @State private var currentType : [Company] = []
+    private var category = ""
+    private var logo = ""
     init(category: String, logo: String){
-        self.company_ViewModel.fetchData(category: category)
+        self.company_ViewModel.fetchData()
         self.category = category
         self.logo = logo
     }
@@ -170,6 +102,34 @@ struct companyView: View {
                     }
                     .frame(height: 120)
                 }
+                if (category == "food"){
+                    companyList(currentType: company_ViewModel.companyFood)
+                }
+                if (category == "shopping"){
+                    companyList(currentType: company_ViewModel.companyShopping)
+                }
+                if (category == "service"){
+                    companyList(currentType: company_ViewModel.companyService)
+                }
+                if (category == "activities"){
+                    companyList(currentType: company_ViewModel.companyActivities)
+                }
+                /*List(currentType) { company in
+                    NavigationLink(destination: Companydeals(CompanyID: company.id)) {
+                        HStack{
+                            VStack(alignment: .leading) {
+                                Text(company.name).font(.title)
+                                Text(company.address).font(.headline)
+                            }
+                            Spacer()
+                            VStack(){
+                                Text("3").font(.title)
+                                Text("Coupons")
+                            }
+                        }
+                    }
+                }*/
+                /*
                 List(company_ViewModel.company) { company in
                     NavigationLink(destination: Companydeals(CompanyID: company.id)) {
                         HStack{
@@ -184,7 +144,7 @@ struct companyView: View {
                             }
                         }
                     }
-                }
+                }*/
             }
         }.tabItem{
             Image(systemName: self.logo)
