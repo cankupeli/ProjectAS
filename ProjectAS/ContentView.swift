@@ -29,7 +29,7 @@ struct companyList: View{
     let currentType : [Company]
     var body: some View {
         List(currentType) { company in
-            NavigationLink(destination: Companydeals(CompanyID: company.id)) {
+            NavigationLink(destination: Companydeals(currentPlace: company)) {
                 HStack{
                     VStack(alignment: .leading) {
                         Text(company.name).font(.title)

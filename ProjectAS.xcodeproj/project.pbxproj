@@ -607,7 +607,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ProjectAS/Preview Content\"";
-				DEVELOPMENT_TEAM = BW6Y63RZGC;
+				DEVELOPMENT_TEAM = ZQ23F2Q74H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This application needs your location to determine the deals best suited for you";
@@ -637,7 +637,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ProjectAS/Preview Content\"";
-				DEVELOPMENT_TEAM = BW6Y63RZGC;
+				DEVELOPMENT_TEAM = ZQ23F2Q74H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This application needs your location to determine the deals best suited for you";

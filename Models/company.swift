@@ -13,6 +13,7 @@ struct Company: Identifiable{
     var id: String = UUID().uuidString
     var name: String
     var address: String
+    var description: String
     var location:  GeoPoint
     var categories: Array<String>
 }

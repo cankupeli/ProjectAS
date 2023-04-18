@@ -10,7 +10,7 @@ import SwiftUI
 import MapKit
 
 
-struct A: View {
+/*struct A: View {
     let companyID: String
     var body: some View {
         Menu {
@@ -23,12 +23,11 @@ struct A: View {
             Image(systemName: "mappin").symbolRenderingMode(.hierarchical).foregroundStyle(.red).font(.system(size: 20, weight: .black))
         }
     }
-}
+}*/
 struct mapCallout: View {
-    //var currentPlace: Company
-    var companyName: String
-    var companyID: String
-    @Binding var currentLocation: String
+    var currentPlace: Company
+    //@Binding var currentLocation: String
+    @Binding var currentLocation: Bool
     var body: some View {
       VStack{
           Spacer()
@@ -36,20 +35,21 @@ struct mapCallout: View {
                   HStack {
                       VStack(alignment: .leading) {
                           Button{
-                              currentLocation = "NULL"
+                              //currentLocation = "NULL"
+                              currentLocation.toggle()
                           }
                       label:{
                           Image(systemName: "xmark").frame(maxWidth: .infinity, alignment: .trailing).foregroundStyle(.black).font(.system(size: 20, weight: .heavy))
-                          }
-                          Text("\(companyName)")
+                      }
+                          Text(currentPlace.name)
                               .font(.title)
                               .fontWeight(.black)
-                              .foregroundColor(.primary)
+                              .foregroundColor(.black)
                               .lineLimit(3)
-                          Text("American burgers, served fresh!".uppercased())
+                          Text(currentPlace.description.uppercased())
                               .font(.caption)
                               .foregroundColor(.secondary)
-                          NavigationLink(destination: Companydeals(CompanyID: companyID)) {
+                          NavigationLink(destination: Companydeals(currentPlace: currentPlace)) {
                                   Text("See Coupons")
                                       .bold()
                                       .padding()
@@ -98,8 +98,9 @@ struct B: View {
 struct discoveryPage: View {
     @ObservedObject private var map_ViewModel = mapViewModel()
     @ObservedObject private var company_ViewModel = companyViewModel()
-    @State private var currentLocation: String = "NULL"
-    //@State var currentPlace: Company?
+    //@State private var currentLocation: String = "NULL"
+    @State private var currentLocation: Bool = false
+    @State var currentPlace: Company?
     @State private var currentLocationName: String = "NULL"
     @State private var currentLocationDescription: String = "NULL"
     @State private var companyCoordinates: [Company] = []
@@ -118,9 +119,13 @@ struct discoveryPage: View {
                     annotationContent: { item in
                     MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: item.location.latitude, longitude: item.location.longitude)){
                         Button{
-                            currentLocation = item.id
-                            currentLocationName = item.name
-                            //currentPlace = item
+                            //currentLocation = item.id
+                            //currentLocationName = item.name
+                            if (!currentLocation || currentPlace?.id == item.id){
+                                currentLocation.toggle()
+                            }
+                            //currentLocation.toggle()
+                            currentPlace = item
                         }
                         label: {
                             B(companyType: item.categories)
@@ -135,22 +140,37 @@ struct discoveryPage: View {
                     VStack{
                         Menu{
                             Button("All"){
+                                if (currentType != "all"){
+                                    currentLocation = false
+                                }
                                 currentType = "all"
                                 self.companyCoordinates = company_ViewModel.companyAll
                             }
                             Button(" Food"){
+                                if (currentType != "food"){
+                                    currentLocation = false
+                                }
                                 currentType = "food"
                                 self.companyCoordinates = company_ViewModel.companyFood
                             }
                             Button(" Shopping"){
+                                if (currentType != "shopping"){
+                                    currentLocation = false
+                                }
                                 currentType = "shopping"
                                 self.companyCoordinates = company_ViewModel.companyShopping
                             }
                             Button(" Service"){
+                                if (currentType != "service"){
+                                    currentLocation = false
+                                }
                                 currentType = "service"
                                 self.companyCoordinates = company_ViewModel.companyService
                             }
                             Button(" Activities"){
+                                if (currentType != "activities"){
+                                    currentLocation = false
+                                }
                                 currentType = "activities"
                                 self.companyCoordinates = company_ViewModel.companyActivities
                             }
@@ -159,9 +179,12 @@ struct discoveryPage: View {
                             Text("Showing: \(currentType.capitalized)").bold()
                         }.buttonStyle(.plain).padding().background(.white .opacity(0.8)).frame(alignment: .topLeading).cornerRadius(20)
                         Spacer()
-                        if (currentLocation != "NULL"){
-                            mapCallout(companyName: currentLocationName, companyID: currentLocation, currentLocation: $currentLocation)
+                        if (currentLocation){
+                            mapCallout(currentPlace: currentPlace!, currentLocation: $currentLocation)
                         }
+                        /*if (currentLocation != "NULL"){
+                            mapCallout(currentPlace: currentPlace!, currentLocation: $currentLocation)
+                        }*/
                     }
                 }
         }.tabItem{

@@ -9,27 +9,28 @@ import Foundation
 import SwiftUI
 struct Companydeals: View {
     @ObservedObject private var companyDeals_ViewModel = companyDealsViewModel()
-    var CompanyID = ""
-    init(CompanyID: String){
-        self.companyDeals_ViewModel.fetchData(company: CompanyID)
-        self.CompanyID = CompanyID
-    }
+    var currentPlace: Company
     var body: some View{
-        Text("Welcome to ")
-        NavigationStack{
-            List(companyDeals_ViewModel.companyDeals) { CompanyDeals in
-                    HStack{
-                        VStack(alignment: .leading) {
-                            Text(CompanyDeals.title).font(.title)
-                            Text(CompanyDeals.description).font(.headline)
-                        }
-                        Spacer()
-                        VStack(){
-                            Text("3").font(.title)
-                            Text("Coupons")
-                        }
+        VStack{
+            Text("Welcome to \(currentPlace.name)")
+            NavigationStack{
+                List(companyDeals_ViewModel.companyDeals) { CompanyDeals in
+                        HStack{
+                            VStack(alignment: .leading) {
+                                Text(CompanyDeals.title).font(.title)
+                                Text(CompanyDeals.description).font(.headline)
+                            }
+                            Spacer()
+                            VStack(){
+                                Text("3").font(.title)
+                                Text("Coupons")
+                            }
+                    }
                 }
             }
+        }.onAppear{
+            self.companyDeals_ViewModel.fetchData(company: currentPlace.id)
+            
         }
     }
 }

@@ -30,21 +30,22 @@ class companyViewModel: ObservableObject {
                 let id = queryDocumentSnapshot.documentID
                 let name = data["name"] as? String ?? ""
                 let address = data["address"] as? String ?? ""
+                let description = data["description"] as? String ?? ""
                 let location = data["location"] as! GeoPoint
                 let categories = data["categories"] as? [String] ?? []
                 if (categories.contains("food")){
-                    self.companyFood.append(Company(id: id, name: name, address: address, location: location, categories: categories))
+                    self.companyFood.append(Company(id: id, name: name, address: address, description: description, location: location, categories: categories))
                 }
                 if (categories.contains("shopping")){
-                    self.companyShopping.append(Company(id: id, name: name, address: address, location: location, categories: categories))
+                    self.companyShopping.append(Company(id: id, name: name, address: address, description: description, location: location, categories: categories))
                 }
                 if (categories.contains("service")){
-                    self.companyService.append(Company(id: id, name: name, address: address, location: location, categories: categories))
+                    self.companyService.append(Company(id: id, name: name, address: address, description: description, location: location, categories: categories))
                 }
                 if (categories.contains("activities")){
-                    self.companyActivities.append(Company(id: id, name: name, address: address, location: location, categories: categories))
+                    self.companyActivities.append(Company(id: id, name: name, address: address, description: description, location: location, categories: categories))
                 }
-                return Company(id: id, name: name, address: address, location: location, categories: categories)
+                return Company(id: id, name: name, address: address, description: description, location: location, categories: categories)
             }
         }
     }
