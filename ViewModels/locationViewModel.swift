@@ -11,7 +11,7 @@ import FirebaseFirestore
 class locationViewModel: ObservableObject {
     
     @Published var locations = [Location]()
-    @Published var currentLocation = Location(name: "UNDEFINED", description: "UNDEFINED")
+    @Published var currentLocation = Location(name: "", description: "")
     private var db = Firestore.firestore()
     
     func fetchData() {

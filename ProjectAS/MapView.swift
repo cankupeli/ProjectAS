@@ -31,6 +31,7 @@ struct mapCallout: View {
                               .lineLimit(3)
                           Text(currentPlace.description.uppercased())
                               .font(.caption)
+                              .foregroundColor(.black)
                               .foregroundColor(.secondary)
                           NavigationLink(destination: Companydeals(currentPlace: currentPlace)) {
                                   Text("See Coupons")
@@ -42,7 +43,7 @@ struct mapCallout: View {
                                       .frame(maxWidth: .infinity, alignment: .center)
                           }
                           //.buttonStyle(.bordered)
-                          .buttonStyle(.borderedProminent)
+                          .buttonStyle(.borderedProminent).tint(Color("ApplicationColour"))
                       }
                       .layoutPriority(100)
                       Spacer()

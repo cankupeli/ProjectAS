@@ -35,68 +35,34 @@ struct companyList: View{
                         Text(company.name).font(.title)
                         Text(company.address).font(.headline)
                     }
-                    Spacer()
+                    /*Spacer()
                     VStack(){
                         Text("3").font(.title)
                         Text("Coupons")
-                    }
+                    }*/
                 }
             }
         }
     }
 }
 struct companyView: View {
-    @ObservedObject private var location_ViewModel = locationViewModel()
-    @ObservedObject private var company_ViewModel = companyViewModel()
-    @State private var path = NavigationPath()
+    @EnvironmentObject private var location_ViewModel: locationViewModel
+    @EnvironmentObject private var company_ViewModel: companyViewModel
+    //@ObservedObject private var location_ViewModel = locationViewModel()
+    //@ObservedObject private var company_ViewModel = companyViewModel()
+    //@State private var path = NavigationPath()
     @State private var locationChangerButton = false
-    @State private var currentType : [Company] = []
+    //@State private var currentType : [Company] = []
     private var category = ""
     private var logo = ""
     init(category: String, logo: String){
-        self.company_ViewModel.fetchData()
+        //self.company_ViewModel.fetchData()
         self.category = category
         self.logo = logo
     }
     var body: some View {
         NavigationStack{
             VStack(alignment: .center){
-                /*
-                 VStack{
-                     Text("You are currently exploring").foregroundColor(.white)
-                     Button{
-                         locationChangerButton.toggle()
-                     } label:{
-                         Text("Sundsvall").foregroundColor(.white).bold().font(.system(size: 28)).padding(8).overlay(
-                             RoundedRectangle(cornerRadius: 16)
-                                 .stroke(.blue, lineWidth: 2)
-                         )
-                     }.sheet(isPresented: $locationChangerButton){
-                         VStack {
-                             Button("Dismiss",
-                                    action: { locationChangerButton.toggle() })
-                         }.presentationDetents([.large, .medium, .fraction(0.6)])
-                     }
-                     Text(location_ViewModel.currentLocation.description).foregroundColor(.white).font(.headline).lineLimit(4).padding(8).onAppear() {
-                         self.location_ViewModel.fetchData()
-                     }
-                 }.frame(maxWidth: .infinity).padding(0).background(Color("ApplicationColour"))
-                 VStack(alignment: .leading) {
-                     Text("Categories")
-                         .font(.headline)
-                         .padding(.leading, 15)
-                         .padding(.top, 5)
-                     ScrollView(.horizontal, showsIndicators: false) {
-                         HStack(alignment: .top, spacing: 0) {
-                             CategoryListItem(Categorytype: "Burger").shadow(radius: 5)
-                             CategoryListItem(Categorytype: "Pizza").shadow(radius: 5)
-                             CategoryListItem(Categorytype: "Sushi").shadow(radius: 5)
-                             CategoryListItem(Categorytype: "Mexican").shadow(radius: 5)
-                         }
-                     }
-                     .frame(height: 120)
-                 }
-                 */
                 VStack{
                     Text("You are currently exploring")
                     Button{
@@ -112,9 +78,9 @@ struct companyView: View {
                                    action: { locationChangerButton.toggle() })
                         }.presentationDetents([.large, .medium, .fraction(0.6)])
                     }
-                    Text(location_ViewModel.currentLocation.description).font(.headline).lineLimit(4).padding(8).onAppear() {
+                    Text(location_ViewModel.currentLocation.description).font(.headline).lineLimit(4).padding(8)/*.onAppear() {
                         self.location_ViewModel.fetchData()
-                    }
+                    }*/
                 }
                 VStack(alignment: .leading) {
                     Text("Categories")
@@ -151,6 +117,12 @@ struct companyView: View {
     }
 }
 struct ContentView: View {
+    @ObservedObject private var company_ViewModel = companyViewModel()
+    @ObservedObject private var location_ViewModel = locationViewModel()
+    init(){
+        company_ViewModel.fetchData()
+        location_ViewModel.fetchData()
+    }
     var body: some View {
             TabView {
                 companyView(category: "food", logo: "fork.knife")
@@ -158,7 +130,7 @@ struct ContentView: View {
                 discoveryPage()
                 companyView(category: "service", logo: "fuelpump.fill")
                 companyView(category: "activities", logo: "basketball.fill")
-            }
+            }.environmentObject(company_ViewModel).environmentObject(location_ViewModel)
         }
     }
 
