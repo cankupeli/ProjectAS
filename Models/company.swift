@@ -14,6 +14,7 @@ struct Company: Identifiable{
     var name: String
     var address: String
     var description: String
+    var type: String
     var location:  GeoPoint
     var categories: Array<String>
 }

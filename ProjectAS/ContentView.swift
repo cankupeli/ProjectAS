@@ -10,7 +10,48 @@ import MapKit
 
 struct CategoryListItem: View{
     let Categorytype: String
+    @Binding var filter: String
     var body: some View {
+        Button{
+            if (filter != Categorytype){
+                filter = Categorytype
+            }
+            else{
+                filter = "all"
+            }
+        } label:{
+            if (Categorytype == filter){
+            VStack(alignment: .center) {
+                HStack{
+                    Image(systemName: "laurel.leading").renderingMode(.original).foregroundStyle(.green).font(.system(size: 25, weight: .black))
+                    Image(systemName: "laurel.trailing").renderingMode(.original).foregroundStyle(.blue).font(.system(size: 25, weight: .black))
+                }
+                    .frame(width: 100, height: 90)
+                    .background(Color("ApplicationColour")).cornerRadius(20)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20).stroke(.blue, lineWidth: 4)
+                    )
+                Text("\(Categorytype.capitalized)")
+                    .font(.subheadline)
+                
+            }
+            .padding(.leading, 10)}
+            else{
+            VStack(alignment: .center) {
+                HStack{
+                    Image(systemName: "laurel.leading").renderingMode(.original).foregroundStyle(.green).font(.system(size: 25, weight: .black))
+                    Image(systemName: "laurel.trailing").renderingMode(.original).foregroundStyle(.blue).font(.system(size: 25, weight: .black))
+                }
+                    .frame(width: 100, height: 90)
+                    .background(Color("ApplicationColour")).cornerRadius(20)
+                Text("\(Categorytype.capitalized)")
+                    .font(.subheadline)
+                
+            }
+            .padding(.leading, 10)}
+            
+        }.buttonStyle(PlainButtonStyle())
+        /*
         NavigationLink(destination: EmptyView()) {
             VStack(alignment: .center) {
                 HStack{
@@ -23,19 +64,26 @@ struct CategoryListItem: View{
                     .font(.subheadline)
             }
             .padding(.leading, 10)
-        }.buttonStyle(PlainButtonStyle())
+        }.buttonStyle(PlainButtonStyle())*/
     }
 }
-
+/*
+ restaurant
+ takeaway
+ cafe
+ */
 struct companyList: View{
     let currentType : [Company]
+    @Binding var filter: String
     var body: some View {
         List(currentType) { company in
-            NavigationLink(destination: Companydeals(currentPlace: company)) {
-                HStack{
-                    VStack(alignment: .leading) {
-                        Text(company.name).font(.title)
-                        Text(company.address).font(.headline)
+            if (company.type == filter || filter == "all"){
+                NavigationLink(destination: Companydeals(currentPlace: company)) {
+                    HStack{
+                        VStack(alignment: .leading) {
+                            Text(company.name).font(.title)
+                            Text(company.address).font(.headline)
+                        }
                     }
                 }
             }
@@ -45,12 +93,15 @@ struct companyList: View{
 struct companyView: View {
     @EnvironmentObject private var location_ViewModel: locationViewModel
     @EnvironmentObject private var company_ViewModel: companyViewModel
+    @State private var filter = "all"
     @State private var locationChangerButton = false
+    @State private var filterCollection : [String]
     private var category = ""
     private var logo = ""
-    init(category: String, logo: String){
+    init(category: String, filterCollection: [String], logo: String){
         self.category = category
         self.logo = logo
+        self.filterCollection = filterCollection
     }
     var body: some View {
         NavigationStack{
@@ -79,25 +130,34 @@ struct companyView: View {
                         .padding(.top, 5)
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(alignment: .top, spacing: 0) {
-                            CategoryListItem(Categorytype: "Café").shadow(radius: 5)
-                            CategoryListItem(Categorytype: "Fine Dinning").shadow(radius: 5)
-                            CategoryListItem(Categorytype: "Takeaway").shadow(radius: 5)
-                            CategoryListItem(Categorytype: "Restaurant").shadow(radius: 5)
+                            ForEach(filterCollection, id: \.self) { item in
+                                CategoryListItem(Categorytype: item, filter: $filter)
+                            }
+                            /*CategoryListItem(Categorytype: "cafe", filter: $filter)
+                            CategoryListItem(Categorytype: "fine Dinning", filter: $filter)
+                            CategoryListItem(Categorytype: "takeaway", filter: $filter)
+                            CategoryListItem(Categorytype: "restaurant", filter: $filter)*/
                         }
                     }
                     .frame(height: 120)
+                    VStack(alignment: .leading) {
+                        Text(filter.capitalized)
+                            .font(.headline)
+                            .padding(.leading, 15)
+                            .padding(.top, 5)
+                    }
                 }
                 if (category == "food"){
-                    companyList(currentType: company_ViewModel.companyFood)
+                    companyList(currentType: company_ViewModel.companyFood, filter: $filter)
                 }
                 if (category == "shopping"){
-                    companyList(currentType: company_ViewModel.companyShopping)
+                    companyList(currentType: company_ViewModel.companyShopping, filter: $filter)
                 }
                 if (category == "service"){
-                    companyList(currentType: company_ViewModel.companyService)
+                    companyList(currentType: company_ViewModel.companyService, filter: $filter)
                 }
                 if (category == "activities"){
-                    companyList(currentType: company_ViewModel.companyActivities)
+                    companyList(currentType: company_ViewModel.companyActivities, filter: $filter)
                 }
             }
         }.tabItem{
@@ -115,11 +175,11 @@ struct ContentView: View {
     }
     var body: some View {
             TabView {
-                companyView(category: "food", logo: "fork.knife")
-                companyView(category: "shopping", logo: "cart.fill")
+                companyView(category: "food", filterCollection: ["cafe","fine dinning","takeaway","restaurant"], logo: "fork.knife")
+                companyView(category: "shopping", filterCollection: ["Groceries","Clothes","Hobby", "Electronics"], logo: "cart.fill")
                 discoveryPage()
-                companyView(category: "service", logo: "fuelpump.fill")
-                companyView(category: "activities", logo: "basketball.fill")
+                companyView(category: "service", filterCollection: ["House","Mechanic","Pets"], logo: "fuelpump.fill")
+                companyView(category: "activities", filterCollection: ["Sports", "Events"], logo: "basketball.fill")
             }.environmentObject(company_ViewModel).environmentObject(location_ViewModel)
         }
     }
