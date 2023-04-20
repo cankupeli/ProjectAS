@@ -61,6 +61,42 @@ struct companyView: View {
     var body: some View {
         NavigationStack{
             VStack(alignment: .center){
+                /*
+                 VStack{
+                     Text("You are currently exploring").foregroundColor(.white)
+                     Button{
+                         locationChangerButton.toggle()
+                     } label:{
+                         Text("Sundsvall").foregroundColor(.white).bold().font(.system(size: 28)).padding(8).overlay(
+                             RoundedRectangle(cornerRadius: 16)
+                                 .stroke(.blue, lineWidth: 2)
+                         )
+                     }.sheet(isPresented: $locationChangerButton){
+                         VStack {
+                             Button("Dismiss",
+                                    action: { locationChangerButton.toggle() })
+                         }.presentationDetents([.large, .medium, .fraction(0.6)])
+                     }
+                     Text(location_ViewModel.currentLocation.description).foregroundColor(.white).font(.headline).lineLimit(4).padding(8).onAppear() {
+                         self.location_ViewModel.fetchData()
+                     }
+                 }.frame(maxWidth: .infinity).padding(0).background(Color("ApplicationColour"))
+                 VStack(alignment: .leading) {
+                     Text("Categories")
+                         .font(.headline)
+                         .padding(.leading, 15)
+                         .padding(.top, 5)
+                     ScrollView(.horizontal, showsIndicators: false) {
+                         HStack(alignment: .top, spacing: 0) {
+                             CategoryListItem(Categorytype: "Burger").shadow(radius: 5)
+                             CategoryListItem(Categorytype: "Pizza").shadow(radius: 5)
+                             CategoryListItem(Categorytype: "Sushi").shadow(radius: 5)
+                             CategoryListItem(Categorytype: "Mexican").shadow(radius: 5)
+                         }
+                     }
+                     .frame(height: 120)
+                 }
+                 */
                 VStack{
                     Text("You are currently exploring")
                     Button{
@@ -72,13 +108,6 @@ struct companyView: View {
                         )
                     }.sheet(isPresented: $locationChangerButton){
                         VStack {
-                            Text("License Agreement")
-                                .font(.title)
-                                .padding(50)
-                            Text("""
-                                Terms and conditions go here.
-                            """)
-                            .padding(50)
                             Button("Dismiss",
                                    action: { locationChangerButton.toggle() })
                         }.presentationDetents([.large, .medium, .fraction(0.6)])
@@ -114,37 +143,6 @@ struct companyView: View {
                 if (category == "activities"){
                     companyList(currentType: company_ViewModel.companyActivities)
                 }
-                /*List(currentType) { company in
-                    NavigationLink(destination: Companydeals(CompanyID: company.id)) {
-                        HStack{
-                            VStack(alignment: .leading) {
-                                Text(company.name).font(.title)
-                                Text(company.address).font(.headline)
-                            }
-                            Spacer()
-                            VStack(){
-                                Text("3").font(.title)
-                                Text("Coupons")
-                            }
-                        }
-                    }
-                }*/
-                /*
-                List(company_ViewModel.company) { company in
-                    NavigationLink(destination: Companydeals(CompanyID: company.id)) {
-                        HStack{
-                            VStack(alignment: .leading) {
-                                Text(company.name).font(.title)
-                                Text(company.address).font(.headline)
-                            }
-                            Spacer()
-                            VStack(){
-                                Text("3").font(.title)
-                                Text("Coupons")
-                            }
-                        }
-                    }
-                }*/
             }
         }.tabItem{
             Image(systemName: self.logo)

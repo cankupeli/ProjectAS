@@ -25,7 +25,8 @@ class companyDealsViewModel: ObservableObject {
                 let title = data["title"] as? String ?? ""
                 let price = data["price"] as? String ?? ""
                 let description = data["description"] as? String ?? ""
-                return CompanyDeals(id: id, title: title, price: price, description: description)
+                let type = data["type"] as? String ?? ""
+                return CompanyDeals(id: id, title: title, price: price, description: description, type: type)
             }
         }
     }

@@ -12,4 +12,5 @@ struct CompanyDeals: Identifiable{
     var title: String
     var price: String
     var description: String
+    var type: String
 }

@@ -9,8 +9,8 @@ import Foundation
 import FirebaseFirestore
 
 class companyViewModel: ObservableObject {
-    
-    @Published var company = [Company]()
+    @Published var selectedView: String = "all"
+    @Published var calloutStatus: Bool = false
     @Published var currentCompanyType = [Company]()
     @Published var companyAll = [Company]()
     @Published var companyFood = [Company]()
@@ -18,13 +18,17 @@ class companyViewModel: ObservableObject {
     @Published var companyService = [Company]()
     @Published var companyActivities = [Company]()
     private var db = Firestore.firestore()
-    
+    func update(companyType: [Company], selectedView: String){
+        currentCompanyType = companyType
+        self.selectedView = selectedView
+    }
     func fetchData() {
         db.collection("locations").document("ztjn3j9q7gSonpXEAez0").collection("companies").getDocuments() { (querySnapshot, error) in
             guard let documents = querySnapshot?.documents else {
                 print("No documents")
                 return
             }
+            
             self.companyAll = documents.map { (queryDocumentSnapshot) -> Company in
                 let data = queryDocumentSnapshot.data()
                 let id = queryDocumentSnapshot.documentID

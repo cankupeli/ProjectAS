@@ -19,14 +19,26 @@ final class mapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate{
                     latitudeDelta: 0.09,
                     longitudeDelta: 0.04)
                 )
-    func checkIfLocationServicesIsEnabled(){
-        if CLLocationManager.locationServicesEnabled(){
+    
+    func checkIfLocationServicesIsEnabled() async {
+        DispatchQueue.global(qos: .userInitiated).async {
+              if CLLocationManager.locationServicesEnabled() {
+                  DispatchQueue.main.async {
+                      self.locationManager = CLLocationManager()
+                      self.locationManager!.delegate = self
+                  }
+              }
+            else{
+                print("we dont have GPS access because users location services is not enabled")
+            }
+        }
+        /*if CLLocationManager.locationServicesEnabled(){
             locationManager = CLLocationManager()
             locationManager!.delegate = self
         }
         else{
             print("we dont have GPS access because users location services is not enabled")
-        }
+        }*/
     }
     private func checkLocationAuthorization(){
         guard let locationManager = locationManager else { return }

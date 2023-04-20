@@ -21,9 +21,9 @@ struct mapCallout: View {
                           Button{
                               callOutStatus.toggle()
                           }
-                      label:{
-                          Image(systemName: "xmark").frame(maxWidth: .infinity, alignment: .trailing).foregroundStyle(.black).font(.system(size: 20, weight: .heavy))
-                      }
+                          label:{
+                              Image(systemName: "xmark").frame(maxWidth: .infinity, alignment: .trailing).foregroundStyle(.black).font(.system(size: 20, weight: .heavy))
+                          }
                           Text(currentPlace.name)
                               .font(.title)
                               .fontWeight(.black)
@@ -80,11 +80,8 @@ struct B: View {
 struct discoveryPage: View {
     @ObservedObject private var map_ViewModel = mapViewModel()
     @ObservedObject private var company_ViewModel = companyViewModel()
-    @State private var callOutStatus: Bool = false
     @State private var notFirstLoad: Bool = true
     @State var currentPlace: Company?
-    @State private var companyCoordinates: [Company] = []
-    @State private var currentType : String = "All"
     init(){
         self.company_ViewModel.fetchData()
     }
@@ -93,12 +90,12 @@ struct discoveryPage: View {
             ZStack{
                 Map(coordinateRegion: $map_ViewModel.region,
                     showsUserLocation: true,
-                    annotationItems: companyCoordinates,
+                    annotationItems: company_ViewModel.currentCompanyType,
                     annotationContent: { item in
                     MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: item.location.latitude, longitude: item.location.longitude)){
                         Button{
-                            if (!callOutStatus || currentPlace?.id == item.id){
-                                callOutStatus.toggle()
+                            if (!company_ViewModel.calloutStatus || currentPlace?.id == item.id){
+                                company_ViewModel.calloutStatus.toggle()
                             }
                             currentPlace = item
                         }
@@ -106,58 +103,56 @@ struct discoveryPage: View {
                             B(companyType: item.categories)
                         }
                     }
-                }).onAppear{
+                }).task {
                     if (notFirstLoad){
                         notFirstLoad.toggle()
-                        self.map_ViewModel.checkIfLocationServicesIsEnabled()
+                        await self.map_ViewModel.checkIfLocationServicesIsEnabled()
                     }
-                    self.companyCoordinates = company_ViewModel.companyAll
-                    currentType = "all"
+                }.onAppear{
+                    /*if (notFirstLoad){
+                        notFirstLoad.toggle()
+                    }*/
+                    company_ViewModel.update(companyType: company_ViewModel.companyAll, selectedView: "all")
                 }.edgesIgnoringSafeArea(.top)
                     VStack{
                         Menu{
                             Button("All"){
-                                if (currentType != "all"){
-                                    callOutStatus = false
+                                if (company_ViewModel.selectedView != "all"){
+                                    company_ViewModel.calloutStatus = false
+                                    company_ViewModel.update(companyType: company_ViewModel.companyAll, selectedView: "all")
                                 }
-                                currentType = "all"
-                                self.companyCoordinates = company_ViewModel.companyAll
                             }
                             Button(" Food"){
-                                if (currentType != "food"){
-                                    callOutStatus = false
+                                if (company_ViewModel.selectedView != "food"){
+                                    company_ViewModel.calloutStatus = false
+                                    company_ViewModel.update(companyType: company_ViewModel.companyFood, selectedView: "food")
                                 }
-                                currentType = "food"
-                                self.companyCoordinates = company_ViewModel.companyFood
                             }
                             Button(" Shopping"){
-                                if (currentType != "shopping"){
-                                    callOutStatus = false
+                                if (company_ViewModel.selectedView != "shopping"){
+                                    company_ViewModel.calloutStatus = false
+                                    company_ViewModel.update(companyType: company_ViewModel.companyShopping, selectedView: "shopping")
                                 }
-                                currentType = "shopping"
-                                self.companyCoordinates = company_ViewModel.companyShopping
                             }
                             Button(" Service"){
-                                if (currentType != "service"){
-                                    callOutStatus = false
+                                if (company_ViewModel.selectedView != "service"){
+                                    company_ViewModel.calloutStatus = false
+                                    company_ViewModel.update(companyType: company_ViewModel.companyService, selectedView: "service")
                                 }
-                                currentType = "service"
-                                self.companyCoordinates = company_ViewModel.companyService
                             }
                             Button(" Activities"){
-                                if (currentType != "activities"){
-                                    callOutStatus = false
+                                if (company_ViewModel.selectedView != "activities"){
+                                    company_ViewModel.calloutStatus = false
+                                    company_ViewModel.update(companyType: company_ViewModel.companyActivities, selectedView: "activities")
                                 }
-                                currentType = "activities"
-                                self.companyCoordinates = company_ViewModel.companyActivities
                             }
                         } label: {
                             Image(systemName: "filemenu.and.selection")
-                            Text("Showing: \(currentType.capitalized)").bold()
+                            Text("Showing: \(company_ViewModel.selectedView.capitalized)").bold()
                         }.buttonStyle(.plain).padding().background(.white .opacity(0.8)).frame(alignment: .topLeading).cornerRadius(20)
                         Spacer()
-                        if (callOutStatus){
-                            mapCallout(currentPlace: currentPlace!, callOutStatus: $callOutStatus)
+                        if(company_ViewModel.calloutStatus){
+                            mapCallout(currentPlace: currentPlace!, callOutStatus: $company_ViewModel.calloutStatus)
                         }
                     }
                 }
