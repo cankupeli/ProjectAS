@@ -13,10 +13,12 @@ struct CategoryListItem: View{
     var body: some View {
         NavigationLink(destination: EmptyView()) {
             VStack(alignment: .center) {
-                Image("\(Categorytype)")
-                    .resizable()
+                HStack{
+                    Image(systemName: "laurel.leading").renderingMode(.original).foregroundStyle(.green).font(.system(size: 25, weight: .black))
+                    Image(systemName: "laurel.trailing").renderingMode(.original).foregroundStyle(.blue).font(.system(size: 25, weight: .black))
+                }
                     .frame(width: 100, height: 90)
-                    .cornerRadius(5)
+                    .background(Color("ApplicationColour")).cornerRadius(20)
                 Text("\(Categorytype)")
                     .font(.subheadline)
             }
@@ -35,11 +37,6 @@ struct companyList: View{
                         Text(company.name).font(.title)
                         Text(company.address).font(.headline)
                     }
-                    /*Spacer()
-                    VStack(){
-                        Text("3").font(.title)
-                        Text("Coupons")
-                    }*/
                 }
             }
         }
@@ -48,15 +45,10 @@ struct companyList: View{
 struct companyView: View {
     @EnvironmentObject private var location_ViewModel: locationViewModel
     @EnvironmentObject private var company_ViewModel: companyViewModel
-    //@ObservedObject private var location_ViewModel = locationViewModel()
-    //@ObservedObject private var company_ViewModel = companyViewModel()
-    //@State private var path = NavigationPath()
     @State private var locationChangerButton = false
-    //@State private var currentType : [Company] = []
     private var category = ""
     private var logo = ""
     init(category: String, logo: String){
-        //self.company_ViewModel.fetchData()
         self.category = category
         self.logo = logo
     }
@@ -80,25 +72,6 @@ struct companyView: View {
                     }
                     Text(location_ViewModel.currentLocation.description).foregroundColor(.white).font(.headline).lineLimit(4).padding(8)
                 }.frame(maxWidth: .infinity).padding(.bottom, 10).background(Color("ApplicationColour"))
-                /*VStack{
-                    Text("You are currently exploring")
-                    Button{
-                        locationChangerButton.toggle()
-                    } label:{
-                        Text("Sundsvall").bold().font(.system(size: 28)).padding(8).overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(.blue, lineWidth: 2)
-                        )
-                    }.sheet(isPresented: $locationChangerButton){
-                        VStack {
-                            Button("Dismiss",
-                                   action: { locationChangerButton.toggle() })
-                        }.presentationDetents([.large, .medium, .fraction(0.6)])
-                    }
-                    Text(location_ViewModel.currentLocation.description).font(.headline).lineLimit(4).padding(8)/*.onAppear() {
-                        self.location_ViewModel.fetchData()
-                    }*/
-                }*/
                 VStack(alignment: .leading) {
                     Text("Categories")
                         .font(.headline)
@@ -106,10 +79,10 @@ struct companyView: View {
                         .padding(.top, 5)
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(alignment: .top, spacing: 0) {
-                            CategoryListItem(Categorytype: "Burger").shadow(radius: 5)
-                            CategoryListItem(Categorytype: "Pizza").shadow(radius: 5)
-                            CategoryListItem(Categorytype: "Sushi").shadow(radius: 5)
-                            CategoryListItem(Categorytype: "Mexican").shadow(radius: 5)
+                            CategoryListItem(Categorytype: "Café").shadow(radius: 5)
+                            CategoryListItem(Categorytype: "Fine Dinning").shadow(radius: 5)
+                            CategoryListItem(Categorytype: "Takeaway").shadow(radius: 5)
+                            CategoryListItem(Categorytype: "Restaurant").shadow(radius: 5)
                         }
                     }
                     .frame(height: 120)
