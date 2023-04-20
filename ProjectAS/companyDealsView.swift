@@ -34,7 +34,7 @@ struct sheetView: View{
                     .cornerRadius(15)
                     .frame(maxWidth: .infinity, alignment: .center)
             }.padding(.horizontal, 20).buttonStyle(.borderedProminent).tint(Color("ApplicationColour"))
-        }.presentationDetents([.medium, .fraction(0.4)]).presentationDragIndicator(.hidden)
+        }
         Text("*Once activated, you'll have 15 minutes to use the coupon before it becomes automatically used").font(.system(size: 13)).italic().padding(5)
     }
 }

@@ -64,6 +64,23 @@ struct companyView: View {
         NavigationStack{
             VStack(alignment: .center){
                 VStack{
+                    Text("You are currently exploring").foregroundColor(.white).font(.caption).italic()
+                    Button{
+                        locationChangerButton.toggle()
+                    } label:{
+                        Text("Sundsvall").foregroundColor(.white).bold().font(.system(size: 28)).padding(8).overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(.blue, lineWidth: 2)
+                        )
+                    }.sheet(isPresented: $locationChangerButton){
+                        VStack {
+                            Button("Dismiss",
+                                   action: { locationChangerButton.toggle() })
+                        }.presentationDetents([.large, .medium, .fraction(0.6)])
+                    }
+                    Text(location_ViewModel.currentLocation.description).foregroundColor(.white).font(.headline).lineLimit(4).padding(8)
+                }.frame(maxWidth: .infinity).padding(.bottom, 10).background(Color("ApplicationColour"))
+                /*VStack{
                     Text("You are currently exploring")
                     Button{
                         locationChangerButton.toggle()
@@ -81,7 +98,7 @@ struct companyView: View {
                     Text(location_ViewModel.currentLocation.description).font(.headline).lineLimit(4).padding(8)/*.onAppear() {
                         self.location_ViewModel.fetchData()
                     }*/
-                }
+                }*/
                 VStack(alignment: .leading) {
                     Text("Categories")
                         .font(.headline)
