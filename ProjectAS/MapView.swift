@@ -29,7 +29,7 @@ struct mapCallout: View {
                               .fontWeight(.black)
                               .foregroundColor(.black)
                               .lineLimit(3)
-                          Text(currentPlace.description.uppercased())
+                          Text(currentPlace.description)
                               .font(.caption)
                               .foregroundColor(.black)
                               .foregroundColor(.secondary)
@@ -70,22 +70,26 @@ struct B: View {
                     case "activities":
                         Image(systemName: "basketball.circle.fill").renderingMode(.original).foregroundStyle(.blue).font(.system(size: 25, weight: .black))
                     default:
-                        Image(systemName: "timelapse.circle.fill").renderingMode(.original).foregroundStyle(.black).font(.system(size: 20, weight: .black))
+                        Image(systemName: "timelapse.circle.fill").renderingMode(.original).foregroundStyle(.black).font(.system(size: 25, weight: .black))
                     }
             default:
-                Image(systemName: "mappin").symbolRenderingMode(.hierarchical).foregroundStyle(.red).font(.system(size: 20, weight: .black))
+                Image(systemName: "multiply.circle.fill").symbolRenderingMode(.palette).foregroundStyle(.white, .green).font(.system(size: 25, weight: .black))
         }
     }
 }
 
 struct discoveryPage: View {
-    @ObservedObject private var map_ViewModel = mapViewModel()
-    @ObservedObject private var company_ViewModel = companyViewModel()
+    //@ObservedObject private var map_ViewModel = mapViewModel()
+    //@EnvironmentObject private var map_ViewModel: mapViewModel
+    @EnvironmentObject private var map_ViewModel: mapViewModel
+    //@ObservedObject private var map_ViewModel = mapViewModel()
+    //@ObservedObject private var company_ViewModel = companyViewModel()
+    @EnvironmentObject private var company_ViewModel: companyViewModel
     @State private var notFirstLoad: Bool = true
     @State var currentPlace: Company?
-    init(){
+    /*init(){
         self.company_ViewModel.fetchData()
-    }
+    }*/
     var body: some View {
         NavigationStack{
             ZStack{
@@ -114,6 +118,7 @@ struct discoveryPage: View {
                         notFirstLoad.toggle()
                     }*/
                     company_ViewModel.update(companyType: company_ViewModel.companyAll, selectedView: "all")
+                    company_ViewModel.calloutStatus = false
                 }.edgesIgnoringSafeArea(.top)
                     VStack{
                         Menu{

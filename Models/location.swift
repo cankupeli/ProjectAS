@@ -6,9 +6,12 @@
 //
 
 import Foundation
+import CoreLocation
+import FirebaseFirestore
 
-struct Location: Identifiable{
+struct Location: Identifiable, Hashable{
     var id: String = UUID().uuidString
     var name: String
+    var location:  GeoPoint
     var description: String
 }

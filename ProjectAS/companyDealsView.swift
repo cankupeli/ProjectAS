@@ -20,8 +20,8 @@ struct sheetView: View{
                 Image(systemName: "xmark").frame(maxWidth: .infinity, alignment: .trailing).foregroundStyle(.black).font(.system(size: 20, weight: .heavy))
             }.padding(20)
             VStack(alignment: .center) {
-                Text(currentDeal.title).font(.title).fixedSize(horizontal: false, vertical: true).fontWeight(.black)
-                Text(currentDeal.description).fixedSize(horizontal: false, vertical: true).font(.caption).padding(5)
+                Text(currentDeal.title).font(.title).fixedSize(horizontal: false, vertical: true).fontWeight(.black).padding(.bottom, 5)
+                Text(currentDeal.description).fixedSize(horizontal: false, vertical: true).font(.body).padding(.horizontal, 15)
             }
             Spacer()
             Button{
@@ -35,10 +35,11 @@ struct sheetView: View{
                     .frame(maxWidth: .infinity, alignment: .center)
             }.padding(.horizontal, 20).buttonStyle(.borderedProminent).tint(Color("ApplicationColour"))
         }
-        Text("*Once activated, you'll have 15 minutes to use the coupon before it becomes automatically used").font(.system(size: 13)).italic().padding(5)
+        Text("*Once activated, you'll have 15 minutes to use the coupon before it expires").font(.system(size: 12)).italic().padding(.horizontal, 25)
     }
 }
 struct Companydeals: View {
+    @EnvironmentObject private var location_ViewModel: locationViewModel
     @ObservedObject private var companyDeals_ViewModel = companyDealsViewModel()
     @State private var dealChangerButton = false
     @State var currentDeal: CompanyDeals?
@@ -72,6 +73,12 @@ struct Companydeals: View {
                                     Text("1").foregroundColor(.white).font(.title).bold()
                                 }.padding(2).background(Color("ApplicationColour")).cornerRadius(20)
                             }
+                            else if(CompanyDeals.type == "price"){
+                                VStack(spacing: 0){
+                                    Text(String(CompanyDeals.price)).foregroundColor(.white).font(.title).fontWeight(.black)
+                                    Text("KR").foregroundColor(.white).font(.system(size: 25)).fontWeight(.black)
+                                }.padding(.vertical, 8).padding(.horizontal, 5).background(Color("ApplicationColour")).cornerRadius(10)
+                            }
                             else{
                                 VStack(spacing: 0){
                                     Text(String(CompanyDeals.type.dropLast())).foregroundColor(.white).font(.title).fontWeight(.black)
@@ -80,7 +87,7 @@ struct Companydeals: View {
                             }
                             VStack(alignment: .leading) {
                                 Text(CompanyDeals.title).font(.title)
-                                Text(CompanyDeals.description).font(.caption)
+                                Text(CompanyDeals.description).font(.caption).lineLimit(2)
                             }
                             Spacer()
                             Image(systemName: "chevron.right")
@@ -92,7 +99,7 @@ struct Companydeals: View {
             sheetView(currentDeal: currentDeal).presentationDetents([ .fraction(0.4)]).presentationDragIndicator(.hidden)
 
         }.onAppear{
-            self.companyDeals_ViewModel.fetchData(company: currentPlace.id)
+            companyDeals_ViewModel.fetchData(company: currentPlace.id, location: location_ViewModel.currentLocation.id)
         }
     }
 }

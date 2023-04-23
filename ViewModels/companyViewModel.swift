@@ -7,7 +7,10 @@
 
 import Foundation
 import FirebaseFirestore
-
+/*
+ Sundsvall: "ztjn3j9q7gSonpXEAez0"
+ Stockholm: "Igo92nJxwwkZ78aSoMQ0"
+ */
 class companyViewModel: ObservableObject {
     @Published var selectedView: String = "all"
     @Published var calloutStatus: Bool = false
@@ -22,13 +25,17 @@ class companyViewModel: ObservableObject {
         currentCompanyType = companyType
         self.selectedView = selectedView
     }
-    func fetchData() {
-        db.collection("locations").document("ztjn3j9q7gSonpXEAez0").collection("companies").getDocuments() { (querySnapshot, error) in
+    func fetchData(location: String) {
+        db.collection("locations").document(location).collection("companies").getDocuments() { (querySnapshot, error) in
             guard let documents = querySnapshot?.documents else {
                 print("No documents")
                 return
             }
-            
+            self.companyAll.removeAll()
+            self.companyFood.removeAll()
+            self.companyShopping.removeAll()
+            self.companyService.removeAll()
+            self.companyActivities.removeAll()
             self.companyAll = documents.map { (queryDocumentSnapshot) -> Company in
                 let data = queryDocumentSnapshot.data()
                 let id = queryDocumentSnapshot.documentID
@@ -36,7 +43,7 @@ class companyViewModel: ObservableObject {
                 let address = data["address"] as? String ?? ""
                 let description = data["description"] as? String ?? ""
                 let type = data["type"] as? String ?? ""
-                let location = data["location"] as! GeoPoint
+                let location = data["location"] as? GeoPoint ?? GeoPoint(latitude: 0,longitude: 0)
                 let categories = data["categories"] as? [String] ?? []
                 if (categories.contains("food")){
                     self.companyFood.append(Company(id: id, name: name, address: address, description: description, type: type, location: location, categories: categories))

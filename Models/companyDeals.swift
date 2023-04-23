@@ -10,7 +10,7 @@ import Foundation
 struct CompanyDeals: Identifiable{
     var id: String = UUID().uuidString
     var title: String
-    var price: String
+    var price: Int
     var description: String
     var type: String
 }

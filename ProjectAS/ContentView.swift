@@ -7,7 +7,6 @@
 import SwiftUI
 import MapKit
 
-
 struct CategoryListItem: View{
     let Categorytype: String
     @Binding var filter: String
@@ -24,13 +23,10 @@ struct CategoryListItem: View{
             VStack(alignment: .center) {
                 HStack{
                     Image(systemName: "laurel.leading").renderingMode(.original).foregroundStyle(.green).font(.system(size: 25, weight: .black))
-                    Image(systemName: "laurel.trailing").renderingMode(.original).foregroundStyle(.blue).font(.system(size: 25, weight: .black))
+                    Image(systemName: "laurel.trailing").renderingMode(.original).foregroundStyle(.green).font(.system(size: 25, weight: .black))
                 }
                     .frame(width: 100, height: 90)
                     .background(Color("ApplicationColour")).cornerRadius(20)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20).stroke(.blue, lineWidth: 4)
-                    )
                 Text("\(Categorytype.capitalized)")
                     .font(.subheadline)
                 
@@ -39,8 +35,8 @@ struct CategoryListItem: View{
             else{
             VStack(alignment: .center) {
                 HStack{
-                    Image(systemName: "laurel.leading").renderingMode(.original).foregroundStyle(.green).font(.system(size: 25, weight: .black))
-                    Image(systemName: "laurel.trailing").renderingMode(.original).foregroundStyle(.blue).font(.system(size: 25, weight: .black))
+                    Image(systemName: "laurel.leading").renderingMode(.original).foregroundStyle(.white).font(.system(size: 25, weight: .black))
+                    Image(systemName: "laurel.trailing").renderingMode(.original).foregroundStyle(.white).font(.system(size: 25, weight: .black))
                 }
                     .frame(width: 100, height: 90)
                     .background(Color("ApplicationColour")).cornerRadius(20)
@@ -51,26 +47,18 @@ struct CategoryListItem: View{
             .padding(.leading, 10)}
             
         }.buttonStyle(PlainButtonStyle())
-        /*
-        NavigationLink(destination: EmptyView()) {
-            VStack(alignment: .center) {
-                HStack{
-                    Image(systemName: "laurel.leading").renderingMode(.original).foregroundStyle(.green).font(.system(size: 25, weight: .black))
-                    Image(systemName: "laurel.trailing").renderingMode(.original).foregroundStyle(.blue).font(.system(size: 25, weight: .black))
-                }
-                    .frame(width: 100, height: 90)
-                    .background(Color("ApplicationColour")).cornerRadius(20)
-                Text("\(Categorytype)")
-                    .font(.subheadline)
-            }
-            .padding(.leading, 10)
-        }.buttonStyle(PlainButtonStyle())*/
     }
 }
 /*
- restaurant
- takeaway
- cafe
+ "restaurant"
+ "takeaway"
+ "cafe"
+ "fine dinning"
+ 
+ "2for1"
+ "price" - check price value
+ "free"
+ "xx%"
  */
 struct companyList: View{
     let currentType : [Company]
@@ -87,12 +75,13 @@ struct companyList: View{
                     }
                 }
             }
-        }
+        }.listStyle(.plain)
     }
 }
 struct companyView: View {
     @EnvironmentObject private var location_ViewModel: locationViewModel
     @EnvironmentObject private var company_ViewModel: companyViewModel
+    @EnvironmentObject private var map_ViewModel: mapViewModel
     @State private var filter = "all"
     @State private var locationChangerButton = false
     @State private var filterCollection : [String]
@@ -111,17 +100,100 @@ struct companyView: View {
                     Button{
                         locationChangerButton.toggle()
                     } label:{
-                        Text("Sundsvall").foregroundColor(.white).bold().font(.system(size: 28)).padding(8).overlay(
+                        Text(location_ViewModel.currentLocation.name).foregroundColor(.white).bold().font(.system(size: 28)).padding(8).overlay(
                             RoundedRectangle(cornerRadius: 16)
-                                .stroke(.blue, lineWidth: 2)
+                                .stroke(.white, lineWidth: 2)
                         )
+                        
                     }.sheet(isPresented: $locationChangerButton){
-                        VStack {
-                            Button("Dismiss",
-                                   action: { locationChangerButton.toggle() })
-                        }.presentationDetents([.large, .medium, .fraction(0.6)])
+                        
+                        VStack{
+                            Text("Locations").font(.body).bold().frame(maxWidth: .infinity, alignment: .center).padding(.horizontal, 15).padding(.top, 15)
+                            /*Button{
+                                locationChangerButton.toggle()
+                            }
+                            label:{
+                                Image(systemName: "xmark").frame(maxWidth: .infinity, alignment: .trailing).foregroundStyle(.black).font(.system(size: 20, weight: .heavy))
+                            }.padding(20)*/
+                            
+                            //ForEach(location_ViewModel.locations, id: \.self) { item in
+                            List(location_ViewModel.locations){ item in
+                                Button{
+                                    locationChangerButton.toggle()
+                                    location_ViewModel.update(place: item.name)
+                                    company_ViewModel.fetchData(location: location_ViewModel.currentLocation.id)
+                                    map_ViewModel.region = MKCoordinateRegion(
+                                                center: CLLocationCoordinate2D(
+                                                    latitude: item.location.latitude,
+                                                    longitude: item.location.longitude),
+                                                span: MKCoordinateSpan(
+                                                    latitudeDelta: 0.09,
+                                                    longitudeDelta: 0.04)
+                                                )
+                                    company_ViewModel.calloutStatus = false
+                                }label:{
+                                    Text(item.name)
+                                            .bold()
+                                            .padding()
+                                            .foregroundColor(.white)
+                                            .cornerRadius(15)
+                                            .frame(maxWidth: .infinity, alignment: .center).buttonStyle(.plain).background(Color("ApplicationColour")).cornerRadius(50).padding(.horizontal, 40)
+                                }.listRowSeparator(.hidden).padding(.vertical, -4)
+                            }.listStyle(.plain)
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            /*
+                            Button{
+                                locationChangerButton.toggle()
+                                location_ViewModel.update(place: "Sundsvall")
+                                company_ViewModel.fetchData(location: location_ViewModel.currentLocation.id)
+                                map_ViewModel.region = MKCoordinateRegion(
+                                            center: CLLocationCoordinate2D(
+                                                latitude: 62.3908,
+                                                longitude: 17.3069),
+                                            span: MKCoordinateSpan(
+                                                latitudeDelta: 0.09,
+                                                longitudeDelta: 0.04)
+                                            )
+                                company_ViewModel.calloutStatus = false
+                            }label:{
+                                    Text("Sundsvall")
+                                        .bold()
+                                        .padding()
+                                        .foregroundColor(.white)
+                                        .cornerRadius(15)
+                                        .frame(maxWidth: .infinity, alignment: .center).buttonStyle(.plain).background(Color("ApplicationColour")).cornerRadius(50).padding(.horizontal, 40)
+                            }
+                            Button{
+                                locationChangerButton.toggle()
+                                location_ViewModel.update(place: "Stockholm")
+                                company_ViewModel.fetchData(location: location_ViewModel.currentLocation.id)
+                                map_ViewModel.region = MKCoordinateRegion(
+                                    center: CLLocationCoordinate2D(
+                                        latitude: 59.32936558843547,
+                                        longitude: 18.070963598329143),
+                                    span: MKCoordinateSpan(
+                                        latitudeDelta: 0.09,
+                                        longitudeDelta: 0.04)
+                                    )
+                                company_ViewModel.calloutStatus = false
+                            }
+                            label:{
+                                    Text("Stockholm")
+                                        .bold()
+                                        .padding()
+                                        .foregroundColor(.white)
+                                        .cornerRadius(15)
+                                        .frame(maxWidth: .infinity, alignment: .center).buttonStyle(.plain).background(Color("ApplicationColour")).cornerRadius(50).padding(.horizontal, 40)
+                            }*/
+                        }.presentationDetents([.fraction(0.3)]).presentationDragIndicator(.visible)
                     }
-                    Text(location_ViewModel.currentLocation.description).foregroundColor(.white).font(.headline).lineLimit(4).padding(8)
+                    Text(location_ViewModel.currentLocation.description).foregroundColor(.white).font(.headline).padding(8)
                 }.frame(maxWidth: .infinity).padding(.bottom, 10).background(Color("ApplicationColour"))
                 VStack(alignment: .leading) {
                     Text("Categories")
@@ -133,10 +205,6 @@ struct companyView: View {
                             ForEach(filterCollection, id: \.self) { item in
                                 CategoryListItem(Categorytype: item, filter: $filter)
                             }
-                            /*CategoryListItem(Categorytype: "cafe", filter: $filter)
-                            CategoryListItem(Categorytype: "fine Dinning", filter: $filter)
-                            CategoryListItem(Categorytype: "takeaway", filter: $filter)
-                            CategoryListItem(Categorytype: "restaurant", filter: $filter)*/
                         }
                     }
                     .frame(height: 120)
@@ -150,13 +218,13 @@ struct companyView: View {
                 if (category == "food"){
                     companyList(currentType: company_ViewModel.companyFood, filter: $filter)
                 }
-                if (category == "shopping"){
+                else if (category == "shopping"){
                     companyList(currentType: company_ViewModel.companyShopping, filter: $filter)
                 }
-                if (category == "service"){
+                else if (category == "service"){
                     companyList(currentType: company_ViewModel.companyService, filter: $filter)
                 }
-                if (category == "activities"){
+                else if (category == "activities"){
                     companyList(currentType: company_ViewModel.companyActivities, filter: $filter)
                 }
             }
@@ -169,18 +237,19 @@ struct companyView: View {
 struct ContentView: View {
     @ObservedObject private var company_ViewModel = companyViewModel()
     @ObservedObject private var location_ViewModel = locationViewModel()
+    @ObservedObject private var map_ViewModel = mapViewModel()
     init(){
-        company_ViewModel.fetchData()
+        company_ViewModel.fetchData(location: location_ViewModel.currentLocation.id)
         location_ViewModel.fetchData()
     }
     var body: some View {
             TabView {
                 companyView(category: "food", filterCollection: ["cafe","fine dinning","takeaway","restaurant"], logo: "fork.knife")
-                companyView(category: "shopping", filterCollection: ["Groceries","Clothes","Hobby", "Electronics"], logo: "cart.fill")
+                companyView(category: "shopping", filterCollection: ["groceries","clothes","hobby", "electronics"], logo: "cart.fill")
                 discoveryPage()
-                companyView(category: "service", filterCollection: ["House","Mechanic","Pets"], logo: "fuelpump.fill")
-                companyView(category: "activities", filterCollection: ["Sports", "Events"], logo: "basketball.fill")
-            }.environmentObject(company_ViewModel).environmentObject(location_ViewModel)
+                companyView(category: "service", filterCollection: ["house","mechanic","pets"], logo: "fuelpump.fill")
+                companyView(category: "activities", filterCollection: ["sports", "events"], logo: "basketball.fill")
+            }.environmentObject(company_ViewModel).environmentObject(location_ViewModel).environmentObject(map_ViewModel)
         }
     }
 
