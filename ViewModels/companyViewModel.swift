@@ -26,16 +26,17 @@ class companyViewModel: ObservableObject {
         self.selectedView = selectedView
     }
     func fetchData(location: String) {
+        self.companyAll.removeAll()
+        self.companyFood.removeAll()
+        self.companyShopping.removeAll()
+        self.companyService.removeAll()
+        self.companyActivities.removeAll()
         db.collection("locations").document(location).collection("companies").getDocuments() { (querySnapshot, error) in
             guard let documents = querySnapshot?.documents else {
                 print("No documents")
                 return
             }
-            self.companyAll.removeAll()
-            self.companyFood.removeAll()
-            self.companyShopping.removeAll()
-            self.companyService.removeAll()
-            self.companyActivities.removeAll()
+
             self.companyAll = documents.map { (queryDocumentSnapshot) -> Company in
                 let data = queryDocumentSnapshot.data()
                 let id = queryDocumentSnapshot.documentID

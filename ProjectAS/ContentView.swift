@@ -82,6 +82,7 @@ struct companyView: View {
     @EnvironmentObject private var location_ViewModel: locationViewModel
     @EnvironmentObject private var company_ViewModel: companyViewModel
     @EnvironmentObject private var map_ViewModel: mapViewModel
+    @EnvironmentObject private var usedDeals_ViewModel: usedDealsViewModel
     @State private var filter = "all"
     @State private var locationChangerButton = false
     @State private var filterCollection : [String]
@@ -140,57 +141,6 @@ struct companyView: View {
                                             .frame(maxWidth: .infinity, alignment: .center).buttonStyle(.plain).background(Color("ApplicationColour")).cornerRadius(50).padding(.horizontal, 40)
                                 }.listRowSeparator(.hidden).padding(.vertical, -4)
                             }.listStyle(.plain)
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            /*
-                            Button{
-                                locationChangerButton.toggle()
-                                location_ViewModel.update(place: "Sundsvall")
-                                company_ViewModel.fetchData(location: location_ViewModel.currentLocation.id)
-                                map_ViewModel.region = MKCoordinateRegion(
-                                            center: CLLocationCoordinate2D(
-                                                latitude: 62.3908,
-                                                longitude: 17.3069),
-                                            span: MKCoordinateSpan(
-                                                latitudeDelta: 0.09,
-                                                longitudeDelta: 0.04)
-                                            )
-                                company_ViewModel.calloutStatus = false
-                            }label:{
-                                    Text("Sundsvall")
-                                        .bold()
-                                        .padding()
-                                        .foregroundColor(.white)
-                                        .cornerRadius(15)
-                                        .frame(maxWidth: .infinity, alignment: .center).buttonStyle(.plain).background(Color("ApplicationColour")).cornerRadius(50).padding(.horizontal, 40)
-                            }
-                            Button{
-                                locationChangerButton.toggle()
-                                location_ViewModel.update(place: "Stockholm")
-                                company_ViewModel.fetchData(location: location_ViewModel.currentLocation.id)
-                                map_ViewModel.region = MKCoordinateRegion(
-                                    center: CLLocationCoordinate2D(
-                                        latitude: 59.32936558843547,
-                                        longitude: 18.070963598329143),
-                                    span: MKCoordinateSpan(
-                                        latitudeDelta: 0.09,
-                                        longitudeDelta: 0.04)
-                                    )
-                                company_ViewModel.calloutStatus = false
-                            }
-                            label:{
-                                    Text("Stockholm")
-                                        .bold()
-                                        .padding()
-                                        .foregroundColor(.white)
-                                        .cornerRadius(15)
-                                        .frame(maxWidth: .infinity, alignment: .center).buttonStyle(.plain).background(Color("ApplicationColour")).cornerRadius(50).padding(.horizontal, 40)
-                            }*/
                         }.presentationDetents([.fraction(0.3)]).presentationDragIndicator(.visible)
                     }
                     Text(location_ViewModel.currentLocation.description).foregroundColor(.white).font(.headline).padding(8)
@@ -238,18 +188,20 @@ struct ContentView: View {
     @ObservedObject private var company_ViewModel = companyViewModel()
     @ObservedObject private var location_ViewModel = locationViewModel()
     @ObservedObject private var map_ViewModel = mapViewModel()
+    @ObservedObject private var usedDeals_ViewModel = usedDealsViewModel()
     init(){
         company_ViewModel.fetchData(location: location_ViewModel.currentLocation.id)
         location_ViewModel.fetchData()
+        usedDeals_ViewModel.fetchData()
     }
     var body: some View {
             TabView {
-                companyView(category: "food", filterCollection: ["cafe","fine dinning","takeaway","restaurant"], logo: "fork.knife")
+                companyView(category: "food", filterCollection: ["cafe","fine dining","takeaway","restaurant"], logo: "fork.knife")
                 companyView(category: "shopping", filterCollection: ["groceries","clothes","hobby", "electronics"], logo: "cart.fill")
                 discoveryPage()
                 companyView(category: "service", filterCollection: ["house","mechanic","pets"], logo: "fuelpump.fill")
                 companyView(category: "activities", filterCollection: ["sports", "events"], logo: "basketball.fill")
-            }.environmentObject(company_ViewModel).environmentObject(location_ViewModel).environmentObject(map_ViewModel)
+            }.environmentObject(company_ViewModel).environmentObject(location_ViewModel).environmentObject(map_ViewModel).environmentObject(usedDeals_ViewModel)
         }
     }
 

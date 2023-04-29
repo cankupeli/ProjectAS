@@ -10,6 +10,7 @@ import SwiftUI
 import SwiftUI
 struct sheetView: View{
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject private var usedDeals_ViewModel: usedDealsViewModel
     @State var currentDeal: CompanyDeals
     var body: some View{
         VStack {
@@ -24,22 +25,51 @@ struct sheetView: View{
                 Text(currentDeal.description).fixedSize(horizontal: false, vertical: true).font(.body).padding(.horizontal, 15)
             }
             Spacer()
-            Button{
-                dismiss()
+            if  usedDeals_ViewModel.isActive(id: currentDeal.id){
+                Button{
+                    dismiss()
+                }
+                label:{
+                    Text("Active till " + usedDeals_ViewModel.getTime(id: currentDeal.id)).font(.system(size: 25, weight: .heavy))
+                        .bold()
+                        .padding()
+                        .cornerRadius(15)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }.padding(.horizontal, 20).buttonStyle(.borderedProminent).tint(Color("ApplicationColour"))
             }
-            label:{
-                Text("Active Me!").font(.system(size: 25, weight: .heavy))
-                    .bold()
-                    .padding()
-                    .cornerRadius(15)
-                    .frame(maxWidth: .infinity, alignment: .center)
-            }.padding(.horizontal, 20).buttonStyle(.borderedProminent).tint(Color("ApplicationColour"))
+            else if usedDeals_ViewModel.isExpired(id: currentDeal.id){
+                Button{
+                    dismiss()
+                }
+                label:{
+                    Text("EXPIRED").foregroundColor(.red).font(.system(size: 25, weight: .heavy))
+                        .bold()
+                        .padding()
+                        .cornerRadius(15)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }.padding(.horizontal, 20).buttonStyle(.borderedProminent).tint(Color("ApplicationColour"))
+            }
+            else{
+                Button{
+                    //dismiss()
+                    usedDeals_ViewModel.useDeal(id: currentDeal.id)
+                    usedDeals_ViewModel.fetchData()
+                }
+                label:{
+                    Text("Activate Me!").font(.system(size: 25, weight: .heavy))
+                        .bold()
+                        .padding()
+                        .cornerRadius(15)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }.padding(.horizontal, 20).buttonStyle(.borderedProminent).tint(Color("ApplicationColour"))
+            }
         }
         Text("*Once activated, you'll have 15 minutes to use the coupon before it expires").font(.system(size: 12)).italic().padding(.horizontal, 25)
     }
 }
 struct Companydeals: View {
     @EnvironmentObject private var location_ViewModel: locationViewModel
+    @EnvironmentObject private var usedDeals_ViewModel: usedDealsViewModel
     @ObservedObject private var companyDeals_ViewModel = companyDealsViewModel()
     @State private var dealChangerButton = false
     @State var currentDeal: CompanyDeals?
@@ -53,46 +83,49 @@ struct Companydeals: View {
             }.padding(.bottom, 20).frame(maxWidth: .infinity).background(Color("ApplicationColour"))
             NavigationStack{
                 List(companyDeals_ViewModel.companyDeals) { CompanyDeals in
-                    Button{
-                        dealChangerButton.toggle()
-                        currentDeal = CompanyDeals
-                    } label:{
-                        HStack{
-                            if (CompanyDeals.type == "free"){
-                                VStack(spacing: -5){
-                                    Text("F").foregroundColor(.white).fontWeight(.black).bold()
-                                    Text("R").foregroundColor(.white).fontWeight(.black).bold()
-                                    Text("E").foregroundColor(.white).fontWeight(.black).bold()
-                                    Text("E").foregroundColor(.white).fontWeight(.black).bold()
-                                }.padding(7).background(Color("ApplicationColour")).cornerRadius(10)
+                    //if !usedDeals_ViewModel.usedDeals.contains(where: { $0.id == CompanyDeals.id})/* && !usedDeals_ViewModel.isActive(id: CompanyDeals.id)*/{
+                    if !usedDeals_ViewModel.isExpired(id: CompanyDeals.id){
+                        Button{
+                                dealChangerButton.toggle()
+                                currentDeal = CompanyDeals
+                        } label:{
+                            HStack{
+                                if (CompanyDeals.type == "free"){
+                                    VStack(spacing: -5){
+                                        Text("F").foregroundColor(.white).fontWeight(.black).bold()
+                                        Text("R").foregroundColor(.white).fontWeight(.black).bold()
+                                        Text("E").foregroundColor(.white).fontWeight(.black).bold()
+                                        Text("E").foregroundColor(.white).fontWeight(.black).bold()
+                                    }.padding(7).background(Color("ApplicationColour")).cornerRadius(10)
+                                }
+                                else if(CompanyDeals.type == "2for1"){
+                                    VStack{
+                                        Text("2").foregroundColor(.white).font(.title).bold()
+                                        Text("For").foregroundColor(.white).font(.body).italic()
+                                        Text("1").foregroundColor(.white).font(.title).bold()
+                                    }.padding(2).background(Color("ApplicationColour")).cornerRadius(20)
+                                }
+                                else if(CompanyDeals.type == "price"){
+                                    VStack(spacing: 0){
+                                        Text(String(CompanyDeals.price)).foregroundColor(.white).font(.title).fontWeight(.black)
+                                        Text("KR").foregroundColor(.white).font(.system(size: 25)).fontWeight(.black)
+                                    }.padding(.vertical, 8).padding(.horizontal, 5).background(Color("ApplicationColour")).cornerRadius(10)
+                                }
+                                else{
+                                    VStack(spacing: 0){
+                                        Text(String(CompanyDeals.type.dropLast())).foregroundColor(.white).font(.title).fontWeight(.black)
+                                        Text("%").foregroundColor(.white).font(.system(size: 36)).fontWeight(.black)
+                                    }.padding(.vertical, 8).padding(.horizontal, 5).background(Color("ApplicationColour")).cornerRadius(10)
+                                }
+                                VStack(alignment: .leading) {
+                                    Text(CompanyDeals.title).font(.title)
+                                    Text(CompanyDeals.description).font(.caption).lineLimit(2)
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
                             }
-                            else if(CompanyDeals.type == "2for1"){
-                                VStack{
-                                    Text("2").foregroundColor(.white).font(.title).bold()
-                                    Text("For").foregroundColor(.white).font(.body).italic()
-                                    Text("1").foregroundColor(.white).font(.title).bold()
-                                }.padding(2).background(Color("ApplicationColour")).cornerRadius(20)
-                            }
-                            else if(CompanyDeals.type == "price"){
-                                VStack(spacing: 0){
-                                    Text(String(CompanyDeals.price)).foregroundColor(.white).font(.title).fontWeight(.black)
-                                    Text("KR").foregroundColor(.white).font(.system(size: 25)).fontWeight(.black)
-                                }.padding(.vertical, 8).padding(.horizontal, 5).background(Color("ApplicationColour")).cornerRadius(10)
-                            }
-                            else{
-                                VStack(spacing: 0){
-                                    Text(String(CompanyDeals.type.dropLast())).foregroundColor(.white).font(.title).fontWeight(.black)
-                                    Text("%").foregroundColor(.white).font(.system(size: 36)).fontWeight(.black)
-                                }.padding(.vertical, 8).padding(.horizontal, 5).background(Color("ApplicationColour")).cornerRadius(10)
-                            }
-                            VStack(alignment: .leading) {
-                                Text(CompanyDeals.title).font(.title)
-                                Text(CompanyDeals.description).font(.caption).lineLimit(2)
-                            }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                        }
-                    }.buttonStyle(.plain)
+                        }.buttonStyle(.plain)
+                    }
                 }
             }
         }.sheet(item: $currentDeal){ currentDeal in
