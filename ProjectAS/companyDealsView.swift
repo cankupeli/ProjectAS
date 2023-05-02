@@ -35,7 +35,7 @@ struct sheetView: View{
                         .padding()
                         .cornerRadius(15)
                         .frame(maxWidth: .infinity, alignment: .center)
-                }.padding(.horizontal, 20).buttonStyle(.borderedProminent).tint(Color("ApplicationColour"))
+                }.padding(.horizontal, 20).buttonStyle(.borderedProminent).tint(Color("ActivatedColour"))
             }
             else if usedDeals_ViewModel.isExpired(id: currentDeal.id){
                 Button{
@@ -53,7 +53,7 @@ struct sheetView: View{
                 Button{
                     //dismiss()
                     usedDeals_ViewModel.useDeal(id: currentDeal.id)
-                    usedDeals_ViewModel.fetchData()
+                    //usedDeals_ViewModel.fetchData()
                 }
                 label:{
                     Text("Activate Me!").font(.system(size: 25, weight: .heavy))
@@ -128,11 +128,11 @@ struct Companydeals: View {
                     }
                 }
             }
+        }.onAppear{
+            usedDeals_ViewModel.fetchData()
+            companyDeals_ViewModel.fetchData(company: currentPlace.id, location: location_ViewModel.currentLocation.id)
         }.sheet(item: $currentDeal){ currentDeal in
             sheetView(currentDeal: currentDeal).presentationDetents([ .fraction(0.4)]).presentationDragIndicator(.hidden)
-
-        }.onAppear{
-            companyDeals_ViewModel.fetchData(company: currentPlace.id, location: location_ViewModel.currentLocation.id)
         }
     }
 }
