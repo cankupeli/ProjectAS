@@ -32,13 +32,6 @@ final class mapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate{
                 print("we dont have GPS access because users location services is not enabled")
             }
         }
-        /*if CLLocationManager.locationServicesEnabled(){
-            locationManager = CLLocationManager()
-            locationManager!.delegate = self
-        }
-        else{
-            print("we dont have GPS access because users location services is not enabled")
-        }*/
     }
     private func checkLocationAuthorization(){
         guard let locationManager = locationManager else { return }

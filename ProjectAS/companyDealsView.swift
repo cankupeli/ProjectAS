@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import SwiftUI
 struct sheetView: View{
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var usedDeals_ViewModel: usedDealsViewModel
@@ -51,9 +50,7 @@ struct sheetView: View{
             }
             else{
                 Button{
-                    //dismiss()
                     usedDeals_ViewModel.useDeal(id: currentDeal.id)
-                    //usedDeals_ViewModel.fetchData()
                 }
                 label:{
                     Text("Activate Me!").font(.system(size: 25, weight: .heavy))
@@ -81,9 +78,7 @@ struct Companydeals: View {
                 Text("\(currentPlace.address)").foregroundColor(.white).font(.caption2)
                 Text("\(currentPlace.description)").foregroundColor(.white).font(.body).padding(.horizontal, 7)
             }.padding(.bottom, 20).frame(maxWidth: .infinity).background(Color("ApplicationColour"))
-            NavigationStack{
                 List(companyDeals_ViewModel.companyDeals) { CompanyDeals in
-                    //if !usedDeals_ViewModel.usedDeals.contains(where: { $0.id == CompanyDeals.id})/* && !usedDeals_ViewModel.isActive(id: CompanyDeals.id)*/{
                     if !usedDeals_ViewModel.isExpired(id: CompanyDeals.id){
                         Button{
                                 dealChangerButton.toggle()
@@ -126,13 +121,12 @@ struct Companydeals: View {
                             }
                         }.buttonStyle(.plain)
                     }
+                }.sheet(item: $currentDeal){ currentDeal in
+                    sheetView(currentDeal: currentDeal).presentationDetents([ .fraction(0.4)]).presentationDragIndicator(.hidden)
                 }
-            }
         }.onAppear{
             usedDeals_ViewModel.fetchData()
             companyDeals_ViewModel.fetchData(company: currentPlace.id, location: location_ViewModel.currentLocation.id)
-        }.sheet(item: $currentDeal){ currentDeal in
-            sheetView(currentDeal: currentDeal).presentationDetents([ .fraction(0.4)]).presentationDragIndicator(.hidden)
         }
     }
 }

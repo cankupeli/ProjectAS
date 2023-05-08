@@ -49,17 +49,6 @@ struct CategoryListItem: View{
         }.buttonStyle(PlainButtonStyle())
     }
 }
-/*
- "restaurant"
- "takeaway"
- "cafe"
- "fine dinning"
- 
- "2for1"
- "price" - check price value
- "free"
- "xx%"
- */
 struct companyList: View{
     let currentType : [Company]
     @Binding var filter: String
@@ -110,14 +99,6 @@ struct companyView: View {
                         
                         VStack{
                             Text("Locations").font(.body).bold().frame(maxWidth: .infinity, alignment: .center).padding(.horizontal, 15).padding(.top, 15)
-                            /*Button{
-                                locationChangerButton.toggle()
-                            }
-                            label:{
-                                Image(systemName: "xmark").frame(maxWidth: .infinity, alignment: .trailing).foregroundStyle(.black).font(.system(size: 20, weight: .heavy))
-                            }.padding(20)*/
-                            
-                            //ForEach(location_ViewModel.locations, id: \.self) { item in
                             List(location_ViewModel.locations){ item in
                                 Button{
                                     locationChangerButton.toggle()
