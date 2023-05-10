@@ -7,10 +7,6 @@
 
 import Foundation
 import FirebaseFirestore
-/*
- Sundsvall: "ztjn3j9q7gSonpXEAez0"
- Stockholm: "Igo92nJxwwkZ78aSoMQ0"
- */
 class companyViewModel: ObservableObject {
     @Published var selectedView: String = "all"
     @Published var calloutStatus: Bool = false

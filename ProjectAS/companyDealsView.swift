@@ -81,8 +81,8 @@ struct Companydeals: View {
                 List(companyDeals_ViewModel.companyDeals) { CompanyDeals in
                     if !usedDeals_ViewModel.isExpired(id: CompanyDeals.id){
                         Button{
-                                dealChangerButton.toggle()
-                                currentDeal = CompanyDeals
+                            dealChangerButton.toggle()
+                            currentDeal = CompanyDeals
                         } label:{
                             HStack{
                                 if (CompanyDeals.type == "free"){

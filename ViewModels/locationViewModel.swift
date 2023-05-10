@@ -7,10 +7,6 @@
 
 import Foundation
 import FirebaseFirestore
-/*
- Sundsvall: "ztjn3j9q7gSonpXEAez0"
- Stockholm: "Igo92nJxwwkZ78aSoMQ0"
- */
 class locationViewModel: ObservableObject {
     @Published var locations = [Location]()
     @Published var currentLocation = Location(id: "ztjn3j9q7gSonpXEAez0", name: "Sundsvall", location: GeoPoint(latitude: 62.3908, longitude: 17.3069), description: "")
