@@ -17,12 +17,12 @@ struct sheetView: View{
                 dismiss()
             }
             label:{
-                Image(systemName: "xmark").frame(maxWidth: .infinity, alignment: .trailing).foregroundStyle(.black).font(.system(size: 20, weight: .heavy))
+                Image(systemName: "xmark").frame(maxWidth: .infinity, alignment: .trailing).foregroundStyle(Color("buttonColour")).font(.system(size: 20, weight: .heavy))
             }.padding(20)
             VStack(alignment: .center) {
                 Text(currentDeal.title).font(.title).fixedSize(horizontal: false, vertical: true).fontWeight(.black).padding(.bottom, 5)
                 Text(currentDeal.description).fixedSize(horizontal: false, vertical: true).font(.body).padding(.horizontal, 15)
-            }
+            }.padding(.top, 0)
             Spacer()
             if  usedDeals_ViewModel.isActive(id: currentDeal.id){
                 Button{
@@ -122,7 +122,7 @@ struct Companydeals: View {
                         }.buttonStyle(.plain)
                     }
                 }.sheet(item: $currentDeal){ currentDeal in
-                    sheetView(currentDeal: currentDeal).presentationDetents([ .fraction(0.4)]).presentationDragIndicator(.hidden)
+                    sheetView(currentDeal: currentDeal).presentationDetents([ .fraction(0.4)]).presentationDragIndicator(.visible)
                 }
         }.onAppear{
             usedDeals_ViewModel.fetchData()

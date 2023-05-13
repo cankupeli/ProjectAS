@@ -37,12 +37,9 @@ struct mapCallout: View {
                                   Text("See Coupons")
                                       .bold()
                                       .padding()
-                                      //.foregroundColor(.black)
-                                      //.background(.black         .opacity(0.1))
                                       .cornerRadius(15)
                                       .frame(maxWidth: .infinity, alignment: .center)
                           }
-                          //.buttonStyle(.bordered)
                           .buttonStyle(.borderedProminent).tint(Color("ApplicationColour"))
                       }
                       .layoutPriority(100)
@@ -79,17 +76,10 @@ struct B: View {
 }
 
 struct discoveryPage: View {
-    //@ObservedObject private var map_ViewModel = mapViewModel()
-    //@EnvironmentObject private var map_ViewModel: mapViewModel
     @EnvironmentObject private var map_ViewModel: mapViewModel
-    //@ObservedObject private var map_ViewModel = mapViewModel()
-    //@ObservedObject private var company_ViewModel = companyViewModel()
     @EnvironmentObject private var company_ViewModel: companyViewModel
     @State private var notFirstLoad: Bool = true
     @State var currentPlace: Company?
-    /*init(){
-        self.company_ViewModel.fetchData()
-    }*/
     var body: some View {
         NavigationStack{
             ZStack{
@@ -108,15 +98,13 @@ struct discoveryPage: View {
                             B(companyType: item.categories)
                         }
                     }
-                }).task {
+                }
+                ).task {
                     if (notFirstLoad){
                         notFirstLoad.toggle()
                         await self.map_ViewModel.checkIfLocationServicesIsEnabled()
                     }
                 }.onAppear{
-                    /*if (notFirstLoad){
-                        notFirstLoad.toggle()
-                    }*/
                     company_ViewModel.update(companyType: company_ViewModel.companyAll, selectedView: "all")
                     company_ViewModel.calloutStatus = false
                 }.edgesIgnoringSafeArea(.top)
@@ -155,7 +143,7 @@ struct discoveryPage: View {
                         } label: {
                             Image(systemName: "filemenu.and.selection")
                             Text("Showing: \(company_ViewModel.selectedView.capitalized)").bold()
-                        }.buttonStyle(.plain).padding().background(.white .opacity(0.8)).frame(alignment: .topLeading).cornerRadius(20)
+                        }.buttonStyle(.plain).padding().background(.white .opacity(0.4)).frame(alignment: .topLeading).cornerRadius(20)
                         Spacer()
                         if(company_ViewModel.calloutStatus){
                             mapCallout(currentPlace: currentPlace!, callOutStatus: $company_ViewModel.calloutStatus)
